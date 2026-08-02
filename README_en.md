@@ -19,7 +19,7 @@ This project provides a complete practical guide combining **AI Coding Agents** 
 
 - Ability to log in to Nano4 with sufficient quota under `/work/$USER`.
 - Authorized `<PROJECT_ID>`; run account/partition preflight immediately before each submission.
-- `GOV115088` is a dedicated biomedical account usable only with explicitly allowed live `ngs*` partitions; general GPU partitions require an authorized general wallet project.
+- `GOV115071` is the authorized general wallet project for this example; run live preflight before using the `dev` GPU partition.
 - Do not commit personal project IDs to version control; specify via `sbatch --account="<PROJECT_ID>"` at submission time.
 - Login nodes require Git, Bash, Python 3, and `uv`. Tutorial 4 additionally requires `curl`, `unzip`, `sha256sum`, and `gzip`.
 
@@ -188,7 +188,7 @@ Send the following prompt directly to the AI Agent (the Agent will check Nano4 a
 
 > **AI Prompt Example (Copy & Paste to AI)**:
 > ```
-> Please complete read-only preflight using nano4-slurm-operations, then use slurm-ampliseq-guide to submit the Moving Pictures 16S single-end analysis job on the ngs250g partition.
+> Please complete read-only preflight using nano4-slurm-operations, then use slurm-ampliseq-guide to submit the Moving Pictures 16S single-end analysis job on the dev partition.
 > My Slurm project account code is <PROJECT_ID>.
 > Input directory is under 01_data/; get absolute project path via pwd and confirm FASTQ paths in samplesheet.tsv are valid.
 > Verify nextflow.config, prepare ampliseq 2.18.0, Singularity images, and SILVA 138.2 on login node via uv, generate Slurm script, submit sbatch, and monitor progress asynchronously.
@@ -208,7 +208,7 @@ bash 03_scripts/prepare_assets.sh
 
 export SLURM_ACCOUNT="<PROJECT_ID>"
 bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
-  --project "$SLURM_ACCOUNT" --partition "ngs250g"
+  --project "$SLURM_ACCOUNT" --partition "dev"
 sbatch --account="$SLURM_ACCOUNT" 03_scripts/submit_ampliseq.slurm
 ```
 Check progress via `squeue -u $USER`.
@@ -257,7 +257,7 @@ http://localhost:8000/04_viewer/index.html
 | `sbatch: error: No project ID was assigned` | Account not specified or subtask re-submitting sbatch | Check `--account` & ensure `nextflow.config` sets `process { executor = 'local' }` |
 | QIIME 2 error `rachis` / temp dir failure | Python 3.12 temp directory isolation issue | Ensure `singularity.runOptions = '-B /tmp:/tmp'` in config |
 | Barrnap WARN: No rRNA detected | 16S V4 amplicon fragment too short (120bp) | Normal behavior; pass `--skip_barrnap` to bypass |
-| Slurm Job Status `PD (Resources)` queued long | `ngs250g` node busy | Check `squeue -p ngs250g`; run preflight if switching partition |
+| Slurm Job Status `PD (Resources)` queued long | `dev` node busy | Check `squeue -p dev`; run preflight if switching partition |
 
 ---
 
@@ -265,20 +265,16 @@ http://localhost:8000/04_viewer/index.html
 
 ### 1. Task Submission & Automation
 - 🎓 **Student Prompt**:
-  > "Please verify my `<PROJECT_ID>` and `ngs250g` using `nano4-slurm-operations`, then submit the 34 Moving Pictures single-end samples using `slurm-ampliseq-guide`. Validate inputs, prepare assets on login node, submit sbatch, and monitor progress asynchronously; report MultiQC link when complete."
+  > "Please verify my `<PROJECT_ID>` and `dev` using `nano4-slurm-operations`, then submit the 34 Moving Pictures single-end samples using `slurm-ampliseq-guide`. Validate inputs, prepare assets on login node, submit sbatch, and monitor progress asynchronously; report MultiQC link when complete."
 
 ### 8. Project Authorization & Partition Verification
 - 🎓 **Student Prompt**:
-  > "Which of the following Partitions can project GOV115088 use? Please help confirm, thank you!
-  > `ngs8g` / `ngs16g` / `ngs32g` / `ngs62g` / `ngs125g`"
+  > "Which of the following Partitions can project GOV115071 use? Please help confirm, thank you!
+  > `dev`"
 - 💡 **AI Response Summary**:
   - Run `scontrol show partition` to inspect `AllowAccounts` policies and Slurm associations.
   - **Conclusion & Compatibility Table**:
-    | Partition Name | Available (GOV115088) | Allowed Project Accounts (AllowAccounts) |
+    | Partition Name | Available (GOV115071) | Live verification |
     | :--- | :--- | :--- |
-    | `ngs62g` | ✅ Available | `mst109178`, `gov108018`, `gov115088` |
-    | `ngs8g` | ❌ Prohibited | `mst109178`, `gov108018` |
-    | `ngs16g` | ❌ Prohibited | `mst109178`, `gov108018` |
-    | `ngs32g` | ❌ Prohibited | `mst109178`, `gov108018` |
-    | `ngs125g` | ❌ Prohibited | `mst109178`, `gov108018` |
-  - Project `GOV115088` can currently use `ngs62g` among the listed partitions, but cannot use `ngs8g`, `ngs16g`, `ngs32g`, or `ngs125g`.
+    | `dev` | ✅ Available | Preflight passed; Job `230782` completed with one GPU |
+  - `GOV115071 + dev` was verified on 2026-08-03; repeat live preflight before every submission.

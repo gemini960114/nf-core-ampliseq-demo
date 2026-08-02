@@ -37,8 +37,8 @@ samplesheet 應包含 `sample`、`fastq_1`、`fastq_2` 三欄。
 
 ## 3. 準備資產、preflight 與提交
 
-將 `<PROJECT_ID>` 換成你被授權使用的計畫。`GOV115088` 只能由具有該
-生醫計畫權限的人員搭配允許它的 `ngs*` partition 使用。
+將 `<PROJECT_ID>` 換成你被授權使用的計畫。`GOV115071` 必須通過 wallet、
+Slurm association 與 `dev` partition policy 驗證。
 
 ```bash
 bash 03_scripts/prepare_assets.sh
@@ -46,7 +46,7 @@ mkdir -p logs/gut-to-soil
 
 bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
   --project "<PROJECT_ID>" \
-  --partition "ngs250g"
+  --partition "dev"
 
 sbatch --account="<PROJECT_ID>" \
   examples/gut-to-soil/submit_ampliseq.slurm

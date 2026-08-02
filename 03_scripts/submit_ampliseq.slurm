@@ -1,11 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=ampliseq_moving_pictures
-#SBATCH --partition=ngs250g
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=32
-#SBATCH --mem=250G
-#SBATCH --time=48:00:00
+#SBATCH --partition=dev
+#SBATCH --ntasks=1
+#SBATCH --gpus-per-node=1
+#SBATCH --time=04:00:00
 #SBATCH --output=logs/job-%j.out
 #SBATCH --error=logs/job-%j.err
 #SBATCH --mail-type=END,FAIL

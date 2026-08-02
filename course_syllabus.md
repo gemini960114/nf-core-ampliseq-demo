@@ -28,7 +28,7 @@
 - **1.1 HPC Slurm 基礎操作與權限設定**
   - 使用者空間 `/work/${USER}` 規範與專案結構建置。
   - Slurm 計畫授權與 account／partition 即時 preflight。
-  - 認識 `GOV115088` 生醫計畫與一般 GPU wallet project 的使用界線。
+  - 認識 `GOV115071` 與 `dev` GPU partition 的即時授權驗證。
 - **1.2 16S 原始定序數據與 Metadata 對照表**
   - 檢視 Moving Pictures 的 34 個 single-end 樣本與 34 個 FASTQ。
   - 格式化 `samplesheet.tsv`（絕對路徑定義）與 `metadata.tsv`（採樣部位、抗生素紀錄、時間點）。
@@ -85,7 +85,7 @@
 
 學員可在學習過程中複製以下 Prompt 對 AI 提問：
 
-1. **任務派送**：「請先使用 `nano4-slurm-operations` 驗證我的 `<PROJECT_ID>` 與 `ngs250g`，再使用 `slurm-ampliseq-guide` 派送 Moving Pictures 16S 分析並以非輪詢方式監控。」
+1. **任務派送**：「請先使用 `nano4-slurm-operations` 驗證我的 `<PROJECT_ID>` 與 `dev`，再使用 `slurm-ampliseq-guide` 派送 Moving Pictures 16S 分析並以非輪詢方式監控。」
 2. **數據解讀**：「Taxonomy 有分析嗎？請幫我分析全樣本與不同 `body_site` 的主要優勢菌門與菌屬。」
 3. **統計分析**：「請幫我分析 Beta 多樣性的統計結果，不同採樣部位 (`body_site`) 的菌群結構差異顯著嗎？」
 4. **報告寫作**：「請幫我寫一份總結報告，說明這次 16S 分析的輸入資料、處理過程與統計結果，輸出至 `04_viewer/report.md`。」

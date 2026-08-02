@@ -45,14 +45,14 @@ bash 03_scripts/prepare_assets.sh
 
 ## 3. Validate Settings & Slurm Permissions
 
-Replace `<PROJECT_ID>` with your authorized project code. `GOV115088` is restricted to users with biomedical allocation access using allowed `ngs*` partitions.
+Replace `<PROJECT_ID>` with your authorized project code. `GOV115071` must pass wallet, Slurm association, and `dev` partition-policy checks.
 
 ```bash
 bash -n 03_scripts/submit_ampliseq.slurm
 
 bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
   --project "<PROJECT_ID>" \
-  --partition "ngs250g"
+  --partition "dev"
 ```
 
 Proceed to submission only if preflight passes completely. Moving Pictures submission parameters are:

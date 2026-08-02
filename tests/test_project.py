@@ -96,6 +96,7 @@ class ProjectContractTests(unittest.TestCase):
             "03_scripts/prepare_assets.sh",
             "03_scripts/prepare_samplesheet.sh",
             "03_scripts/submit_ampliseq.slurm",
+            "03_scripts/test_gpu.slurm",
             "examples/gut-to-soil/download_data.sh",
             "examples/gut-to-soil/submit_ampliseq.slurm",
         )
@@ -113,8 +114,12 @@ class ProjectContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn("set -euo pipefail", script)
+        self.assertIn("#SBATCH --partition=dev", script)
+        self.assertIn("#SBATCH --gpus-per-node=1", script)
         self.assertIn("#SBATCH --time=", script)
         self.assertNotIn("#SBATCH --account=", script)
+        self.assertNotIn("#SBATCH --cpus-per-task=", script)
+        self.assertNotIn("#SBATCH --mem=", script)
         self.assertNotIn("--metadata_category_pairwise", script)
         self.assertIn("--single_end", script)
         self.assertIn('--qiime_adonis_formula "body_site"', script)
@@ -132,6 +137,10 @@ class ProjectContractTests(unittest.TestCase):
         )
 
         self.assertNotIn("#SBATCH --account=", script)
+        self.assertIn("#SBATCH --partition=dev", script)
+        self.assertIn("#SBATCH --gpus-per-node=1", script)
+        self.assertNotIn("#SBATCH --cpus-per-task=", script)
+        self.assertNotIn("#SBATCH --mem=", script)
         self.assertIn("--trunclenr 250", script)
         self.assertIn('--qiime_adonis_formula "SampleType"', script)
         self.assertIn("examples/gut-to-soil/data", script)
@@ -214,7 +223,7 @@ class ProjectContractTests(unittest.TestCase):
         self.assertIn("Gut-to-Soil（Tutorial 4，選修）", readme)
         self.assertIn("34 | 34 | Single-end", readme)
         self.assertIn("104 | 208 | Paired-end", readme)
-        self.assertIn("GOV115088", readme)
+        self.assertIn("GOV115071", readme)
         self.assertIn("參考執行結果", readme)
         self.assertIn("不包含在剛 clone 的 repository", readme)
         self.assertNotRegex(readme, r"\]\(results/")
@@ -241,7 +250,7 @@ class ProjectContractTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
 
         self.assertIn("name: nano4-slurm-operations", skill)
-        self.assertIn("GOV115088", skill)
+        self.assertIn("GOV115071", skill)
         self.assertIn("nano4-slurm-operations", project_rules)
         self.assertIn("slurm-ampliseq-guide", project_rules)
         self.assertNotIn("\nsbatch ", preflight)
@@ -306,10 +315,9 @@ class ProjectContractTests(unittest.TestCase):
             with self.subTest(path=relative_path):
                 self.assertTrue(file_path.is_file())
                 content = file_path.read_text(encoding="utf-8")
-                self.assertTrue("GOV115088" in content or "<PROJECT_ID>" in content)
+                self.assertTrue("GOV115071" in content or "<PROJECT_ID>" in content)
                 self.assertGreater(len(content), 100)
 
 
 if __name__ == "__main__":
     unittest.main()
-

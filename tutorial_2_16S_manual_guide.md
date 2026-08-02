@@ -47,15 +47,15 @@ bash 03_scripts/prepare_assets.sh
 
 ## 3. 驗證設定與 Slurm 權限
 
-將 `<PROJECT_ID>` 替換成你被授權使用的計畫代碼。`GOV115088` 僅供具有
-該生醫計畫權限的人員搭配允許它的 `ngs*` partition 使用。
+將 `<PROJECT_ID>` 替換成你被授權使用的計畫代碼。`GOV115071` 必須通過
+wallet、Slurm association 與 `dev` partition policy 驗證。
 
 ```bash
 bash -n 03_scripts/submit_ampliseq.slurm
 
 bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
   --project "<PROJECT_ID>" \
-  --partition "ngs250g"
+  --partition "dev"
 ```
 
 只有 preflight 完全通過才繼續提交。提交腳本的 Moving Pictures 參數為：

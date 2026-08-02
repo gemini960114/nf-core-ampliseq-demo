@@ -6,6 +6,9 @@ work/
 # 保留空目錄，忽略實際 Slurm 日誌
 logs/*
 !logs/.gitkeep
+!logs/gut-to-soil/
+logs/gut-to-soil/*
+!logs/gut-to-soil/.gitkeep
 
 # 依 clone 位置產生，內含目前使用者的 FASTQ 絕對路徑
 01_data/samplesheet.tsv

@@ -25,8 +25,8 @@ Then sequentially copy **Prompt 1 through Prompt 4** from this guide and send th
 | :--- | :--- | :--- | :--- | :--- |
 | **1. Environment & Resource Query** | **Prompt 1** | Query available Slurm Partition resources & hardware limits | `sinfo` / `scontrol` | `partition.md` |
 | | **Prompt 2** | Use `wallet` command to list available project IDs & quotas | `wallet` | `project.md` |
-| | **Prompt 3** | Verify specific project ID (`GOV115088`) & NGS partition permissions | `sacctmgr` / `scontrol` | `permission.md` |
-| **2. Bio-Analysis Job Submission** | **Prompt 4** | Auto-generate test data, write Python QC script & submit Slurm Job | `sbatch` / Python / `ngs62g` | `report.md` |
+| | **Prompt 3** | Verify specific project ID (`GOV115071`) & `dev` GPU partition permissions | `sacctmgr` / `scontrol` | `permission.md` |
+| **2. Bio-Analysis Job Submission** | **Prompt 4** | Auto-generate test data, write Python QC script & submit Slurm Job | `sbatch` / Python / `dev` | `report.md` |
 
 ---
 
@@ -61,21 +61,21 @@ Output the result to project.md
 
 ---
 
-### 📌 Prompt 3: Verify Specific Project Code (GOV115088)
+### 📌 Prompt 3: Verify Specific Project Code (GOV115071)
 
 ```text
-Which of the following Partitions can project GOV115088 use? Please help confirm, thank you!
-`ngs8g` / `ngs16g` / `ngs32g` / `ngs62g` / `ngs125g`
+Which of the following Partitions can project GOV115071 use? Please help confirm, thank you!
+`dev`
 
 Please perform the following verification steps:
-1. Run `sacctmgr -nP show assoc user="$USER" account="gov115088"` to verify Slurm association authorization.
-2. Run `scontrol show partition` to inspect the AllowAccounts / DenyAccounts policies for `ngs8g` / `ngs16g` / `ngs32g` / `ngs62g` / `ngs125g`, verifying whether `GOV115088` can submit to these Partitions (Note: Currently only `ngs62g` is allowed; `ngs8g` etc. are unavailable).
-3. As this biomedical project may not appear in standard `wallet` listings, explain the check results and include a compatibility table.
+1. Run `sacctmgr -nP show assoc user="$USER" account="gov115071"` to verify Slurm association authorization.
+2. Run `scontrol show partition` to inspect the AllowAccounts / DenyAccounts policies for `dev`, verifying whether `GOV115071` can submit to these Partitions (Note: `dev` has passed an actual GPU job verification).
+3. Validate wallet, Slurm association, and partition policy together.
 Output the result to permission.md
 ```
 
 #### 📖 Explanation & Mechanics:
-* **Purpose**: Verifies whether a specific project (e.g., dedicated biomedical project `GOV115088`) holds scheduler-level submission and partition access rights, avoiding misjudgments from `wallet` alone.
+* **Purpose**: Verifies whether a specific project (e.g., general GPU project `GOV115071`) holds scheduler-level submission and partition access rights, avoiding misjudgments from `wallet` alone.
 * **No-Skill Mechanism**: Eliminates third-party skill dependencies, instructing the AI to use Slurm native database tool `sacctmgr` and node controller `scontrol`.
 * **Key Advantages**: Gives the AI explicit execution steps so it accurately validates Account-Partition policies even in environments without custom skills, writing results to `permission.md`.
 
@@ -87,8 +87,8 @@ Output the result to permission.md
 Please assist in creating and submitting a FASTQ bio-analysis job:
 1. Automatically generate a test FASTQ file `data/test_sample.fastq` containing 1,000 reads under the `data/` directory (if FASTQ files already exist in the project, use existing files).
 2. Create a Python script `script/fastq_qc_stats.py` under `script/` to read the FASTQ file and calculate total read count, average read length, and GC content %.
-3. Write a Slurm submission script under `script/` with partition set to `ngs62g`, directing logs to `logs/`; do not hardcode the project account in version-controlled scripts.
-4. Verify that `logs/` directory exists, validate `GOV115088` and `ngs62g` permissions, and use `sbatch --account="GOV115088"` to submit the job, reporting the Job ID and output inspection steps.
+3. Write a Slurm submission script under `script/` with partition set to `dev` and `--gpus-per-node=1`, no explicit CPU or RAM directives, directing logs to `logs/`; do not hardcode the project account in version-controlled scripts.
+4. Verify that `logs/` directory exists, validate `GOV115071` and `dev` permissions, and use `sbatch --account="GOV115071"` to submit the job, reporting the Job ID and output inspection steps.
 Output the analysis process and results to report.md
 ```
 

@@ -33,7 +33,7 @@ The samplesheet should contain three columns: `sample`, `fastq_1`, `fastq_2`.
 
 ## 3. Prepare Assets, Preflight & Submit
 
-Replace `<PROJECT_ID>` with your authorized project account code. `GOV115088` is restricted to authorized biomedical allocation users using allowed `ngs*` partitions.
+Replace `<PROJECT_ID>` with your authorized project account code. `GOV115071` must pass wallet, Slurm association, and `dev` partition-policy checks.
 
 ```bash
 bash 03_scripts/prepare_assets.sh
@@ -41,7 +41,7 @@ mkdir -p logs/gut-to-soil
 
 bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
   --project "<PROJECT_ID>" \
-  --partition "ngs250g"
+  --partition "dev"
 
 sbatch --account="<PROJECT_ID>" \
   examples/gut-to-soil/submit_ampliseq.slurm

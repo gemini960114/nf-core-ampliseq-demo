@@ -23,8 +23,8 @@ Agent** 與 **`nf-core/ampliseq`（16S 擴增子分析流程）** 的完整教�
 - 可登入 Nano4，並在 `/work/$USER` 擁有足夠空間。
 - 已取得明確授權的 `<PROJECT_ID>`；每次提交前都要即時執行
   account／partition preflight。
-- `GOV115088` 是生醫專用計畫，只能搭配明確允許它的 live `ngs*`
-  partition；一般 GPU partition 必須使用已授權的一般 wallet project。
+- `GOV115071` 是本範例使用者已授權的一般 wallet project；使用 live
+  `dev` GPU partition 前仍須執行 preflight。
 - 不要把個人 project ID 寫入版本控制；以
   `sbatch --account="<PROJECT_ID>"` 在提交時指定。
 - 登入節點需可使用 Git、Bash、Python 3 與 `uv`。Tutorial 4 另需
@@ -204,8 +204,8 @@ bash 03_scripts/prepare_assets.sh
 #### ⚡ 計算資源與物種資料庫彈性設定說明
 AI Agent 會以 `nano4-slurm-operations` 驗證計畫與 partition，再以
 `slurm-ampliseq-guide` 準備 Moving Pictures 分析：
-- **Slurm 分割區 (Partition)**：本範例預設 `ngs250g`；替換 partition 前必須重新執行即時 preflight，不使用文件中的靜態清單推測權限。
-- **CPU & 記憶體**：可指定 `--cpus-per-task=32 --mem=250G`，或依數據規模調整為 16 核 / 64G 等。
+- **Slurm 分割區 (Partition)**：本範例預設 `dev`；替換 partition 前必須重新執行即時 preflight，不使用文件中的靜態清單推測權限。
+- **GPU 資源**：正式腳本使用 `--gpus-per-node=1`，不指定 CPU 數量或 RAM；`dev` 最長執行時間為 4 小時。
 - **物種資料庫 (--dada_ref_taxonomy)**：
   - 16S 細菌：`silva=138.2` (預設)
   - 真菌 ITS：`unite-fungi=9.0`（僅限替換成 ITS 輸入資料後使用）
@@ -222,7 +222,7 @@ partition policy，再準備並提交 ampliseq）：
 
 > **AI 提示詞範例（複製貼上給 AI）**：
 > ```
-> 請先使用 nano4-slurm-operations 完成 read-only preflight，再使用 slurm-ampliseq-guide，幫我在 ngs250g 分割區派送 Moving Pictures 16S 單端分析任務。
+> 請先使用 nano4-slurm-operations 完成 read-only preflight，再使用 slurm-ampliseq-guide，幫我在 dev 分割區派送 Moving Pictures 16S 單端分析任務。
 > 我的 Slurm 計畫代碼是 <PROJECT_ID>。
 > 輸入目錄為目前專案下的 01_data/；請先以 pwd 取得專案絕對路徑，並確認 samplesheet.tsv 內的 FASTQ 皆為有效絕對路徑。
 > 請驗證 nextflow.config、在登入節點使用 uv 預先準備 ampliseq 2.18.0、Singularity images 與 SILVA 138.2，再生成 Slurm 腳本、提交 sbatch 並在背景監控進度。
@@ -242,7 +242,7 @@ bash 03_scripts/prepare_assets.sh
 
 export SLURM_ACCOUNT="<PROJECT_ID>"
 bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
-  --project "$SLURM_ACCOUNT" --partition "ngs250g"
+  --project "$SLURM_ACCOUNT" --partition "dev"
 sbatch --account="$SLURM_ACCOUNT" 03_scripts/submit_ampliseq.slurm
 ```
 並透過 `squeue -u $USER` 查詢工作進度。
@@ -335,7 +335,7 @@ results/
 | `sbatch: error: No project ID was assigned` | 未指定計畫代碼，或 Nextflow 內部子任務再次提交 sbatch | 確認 `--account`，並確保 `nextflow.config` 設定 `process { executor = 'local' }` |
 | QIIME 2 錯誤 `rachis` / 暫存檔失敗 | Python 3.12 暫存目錄隔離問題 | 確保 `singularity.runOptions = '-B /tmp:/tmp'` |
 | Barrnap WARN: 未偵測到 rRNA | 16S V4 擴增子片段太短 (120bp)，正常現象 | 可加入 `--skip_barrnap` 跳過此步驟 |
-| Slurm Job 狀態 `PD (Resources)` 等待過久 | `ngs250g` 節點資源繁忙 | 先查看 `squeue -p ngs250g`；如要更換 partition，重新執行 account/partition preflight |
+| Slurm Job 狀態 `PD (Resources)` 等待過久 | `dev` 節點資源繁忙 | 先查看 `squeue -p dev`；如要更換 partition，重新執行 account/partition preflight |
 | Metadata 欄位名含 `-` 導致 QIIME 2 錯誤 | QIIME 2 不允許欄位名稱含連字號 | 將欄位名稱改為底線 `_`（如 `body-site` → `body_site`）|
 
 ---
@@ -389,7 +389,7 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
 
 ### 1. 任務派送與自動化執行 (Task Submission & Automation)
 - 🎓 **學生提問範例**：
-  > 「請先以 `nano4-slurm-operations` 驗證我的 `<PROJECT_ID>` 與 `ngs250g`，再以 `slurm-ampliseq-guide` 派送 repository 內建的 34 個 Moving Pictures 單端樣本。請驗證輸入、準備登入節點資產、提交 sbatch 並以非輪詢方式監控；完成後告訴我 MultiQC 與成果連結。」
+  > 「請先以 `nano4-slurm-operations` 驗證我的 `<PROJECT_ID>` 與 `dev`，再以 `slurm-ampliseq-guide` 派送 repository 內建的 34 個 Moving Pictures 單端樣本。請驗證輸入、準備登入節點資產、提交 sbatch 並以非輪詢方式監控；完成後告訴我 MultiQC 與成果連結。」
 - 💡 **AI 處理與回答摘要**：
   - 自動檢查 `samplesheet.tsv` 與 `metadata.tsv` 格式。
   - 驗證 `submit_ampliseq.slurm` 與 `nextflow.config`（包含 `-B /tmp:/tmp` 與 `process.executor = 'local'`）。
@@ -461,16 +461,12 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
 
 ### 8. 計畫授權與 Partition 相容性確認 (Project Authorization & Partition Verification)
 - 🎓 **學生提問範例**：
-  > 「請問計畫 GOV115088 可以使用下列哪些 Partition？再麻煩幫忙確認，謝謝！
-  > `ngs8g` / `ngs16g` / `ngs32g` / `ngs62g` / `ngs125g`」
+  > 「請問計畫 GOV115071 可以使用下列哪些 Partition？再麻煩幫忙確認，謝謝！
+  > `dev`」
 - 💡 **AI 處理與回答摘要**：
   - 執行 `scontrol show partition` 檢查各 Partition 的 `AllowAccounts` 政策與 Slurm association。
   - **結論與相容性對照表**：
-    | Partition 名稱 | 是否能使用 (GOV115088) | 允許使用之專案計畫 (AllowAccounts) |
+    | Partition 名稱 | 是否能使用 (GOV115071) | 即時驗證結果 |
     | :--- | :--- | :--- |
-    | `ngs62g` | ✅ 可用 | `mst109178`, `gov108018`, `gov115088` |
-    | `ngs8g` | ❌ 不可用 | `mst109178`, `gov108018` |
-    | `ngs16g` | ❌ 不可用 | `mst109178`, `gov108018` |
-    | `ngs32g` | ❌ 不可用 | `mst109178`, `gov108018` |
-    | `ngs125g` | ❌ 不可用 | `mst109178`, `gov108018` |
-  - 目前計畫 `GOV115088` 僅能在上述清單中使用 `ngs62g`，無法使用 `ngs8g`、`ngs16g`、`ngs32g` 或 `ngs125g`。
+    | `dev` | ✅ 可用 | preflight 通過；Job `230782` 以 1 GPU 完成 |
+  - `GOV115071 + dev` 已於 2026-08-03 實際驗證；每次提交前仍須重跑 live preflight。
