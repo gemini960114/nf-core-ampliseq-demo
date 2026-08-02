@@ -7,8 +7,8 @@ Nano4 以 nf-core/ampliseq 2.18.0、Nextflow 與 Singularity 執行。
 
 ```bash
 cd "/work/$USER"
-git clone https://github.com/gemini960114/nf-core-ampliseq.git
-cd nf-core-ampliseq
+git clone https://github.com/gemini960114/nf-core-ampliseq-demo.git
+cd nf-core-ampliseq-demo
 
 find 01_data/fastq -maxdepth 1 -name '*.fastq.gz' | wc -l
 bash 03_scripts/prepare_samplesheet.sh

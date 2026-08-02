@@ -6,8 +6,8 @@ This tutorial uses the repository's built-in 34 Moving Pictures single-end FASTQ
 
 ```bash
 cd "/work/$USER"
-git clone https://github.com/gemini960114/nf-core-ampliseq.git
-cd nf-core-ampliseq
+git clone https://github.com/gemini960114/nf-core-ampliseq-demo.git
+cd nf-core-ampliseq-demo
 
 find 01_data/fastq -maxdepth 1 -name '*.fastq.gz' | wc -l
 bash 03_scripts/prepare_samplesheet.sh

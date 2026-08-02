@@ -47,7 +47,7 @@ Agent** 與 **`nf-core/ampliseq`（16S 擴增子分析流程）** 的完整教�
 專案採用清晰的「功能導向」三層式目錄設計：
 
 ```text
-nf-core-ampliseq/
+nf-core-ampliseq-demo/
 ├── 📄 README.md             # 🎓 教學逐步操作指南文件 (本檔案)
 ├── 📄 course_syllabus.md    # 教師用課程綱要
 ├── 📄 nextflow.config       # Nextflow 本機執行器與 Singularity 設定
@@ -106,10 +106,10 @@ nf-core-ampliseq/
 ```bash
 # 1. 在自己的工作空間 clone 本專案 repository
 cd "/work/$USER"
-git clone https://github.com/gemini960114/nf-core-ampliseq.git
+git clone https://github.com/gemini960114/nf-core-ampliseq-demo.git
 
 # 2. 進入本專案目錄（所有後續指令都在此目錄下執行）
-cd nf-core-ampliseq
+cd nf-core-ampliseq-demo
 
 # 3. 依目前 clone 位置重建 samplesheet 內的 FASTQ 絕對路徑
 bash 03_scripts/prepare_samplesheet.sh
@@ -124,9 +124,9 @@ ls -la
 若同名目錄已存在，可建立全新的練習 clone：
 
 ```bash
-git clone https://github.com/gemini960114/nf-core-ampliseq.git \
-  nf-core-ampliseq-practice
-cd nf-core-ampliseq-practice
+git clone https://github.com/gemini960114/nf-core-ampliseq-demo.git \
+  nf-core-ampliseq-demo-practice
+cd nf-core-ampliseq-demo-practice
 bash 03_scripts/prepare_samplesheet.sh
 mkdir -p logs
 ```

@@ -40,7 +40,7 @@ This project provides a complete practical guide combining **AI Coding Agents** 
 The project adopts a clear "feature-oriented" 3-tier structure:
 
 ```text
-nf-core-ampliseq/
+nf-core-ampliseq-demo/
 ├── 📄 README.md             # 🎓 Step-by-step tutorial guide (Traditional Chinese)
 ├── 📄 README_en.md          # 🎓 Step-by-step tutorial guide (English)
 ├── 📄 course_syllabus.md    # Course syllabus for instructors
@@ -99,10 +99,10 @@ nf-core-ampliseq/
 ```bash
 # 1. Clone this repository into your workspace
 cd "/work/$USER"
-git clone https://github.com/gemini960114/nf-core-ampliseq.git
+git clone https://github.com/gemini960114/nf-core-ampliseq-demo.git
 
 # 2. Enter project directory (all subsequent commands execute here)
-cd nf-core-ampliseq
+cd nf-core-ampliseq-demo
 
 # 3. Rebuild absolute FASTQ paths in samplesheet based on current clone location
 bash 03_scripts/prepare_samplesheet.sh
@@ -117,9 +117,9 @@ ls -la
 If directory already exists, create a fresh practice clone:
 
 ```bash
-git clone https://github.com/gemini960114/nf-core-ampliseq.git \
-  nf-core-ampliseq-practice
-cd nf-core-ampliseq-practice
+git clone https://github.com/gemini960114/nf-core-ampliseq-demo.git \
+  nf-core-ampliseq-demo-practice
+cd nf-core-ampliseq-demo-practice
 bash 03_scripts/prepare_samplesheet.sh
 mkdir -p logs
 ```

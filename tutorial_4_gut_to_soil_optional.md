@@ -8,8 +8,8 @@
 
 ```bash
 cd "/work/$USER"
-git clone https://github.com/gemini960114/nf-core-ampliseq.git
-cd nf-core-ampliseq
+git clone https://github.com/gemini960114/nf-core-ampliseq-demo.git
+cd nf-core-ampliseq-demo
 ```
 
 ## 2. 下載並準備資料
