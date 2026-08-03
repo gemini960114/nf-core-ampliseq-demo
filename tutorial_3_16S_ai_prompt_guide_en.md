@@ -16,7 +16,10 @@ Please sequentially:
 3. Execute 03_scripts/prepare_samplesheet.sh.
 4. Execute 03_scripts/prepare_assets.sh on login node.
 5. Validate submit_ampliseq.slurm uses --single_end, --trunclenf 120, and runs barplot & Adonis using body_site.
-6. Submit using sbatch --account="<PROJECT_ID>", report Job ID, and monitor with non-polling mechanism.
+6. Do not hardcode CPUs in the tracked .slurm script. After live preflight passes,
+   submit using sbatch --account="<PROJECT_ID>" --cpus-per-task=12, report the Job
+   ID, and monitor without polling. Twelve CPUs was the tested maximum for dev +
+   one GPU on 2026-08-03; follow the live preflight if the current limit differs.
 ```
 
 ## 2. Multi-Stage Prompts
@@ -36,7 +39,7 @@ Check if `uv` is installed on the login node (if missing, install via `curl -LsS
 
 Run 03_scripts/prepare_assets.sh on the login node. Assets must be stored under the current account's own `/work/${USER}/` directories; do not use another account's cache.
 
-After assets are ready, run Nano4 preflight with my project <PROJECT_ID> and dev. Upon passing, submit 03_scripts/submit_ampliseq.slurm using Moving Pictures single-end parameters and report Job ID.
+After assets are ready, run Nano4 preflight with my project <PROJECT_ID> and dev. Upon passing, submit 03_scripts/submit_ampliseq.slurm using Moving Pictures single-end parameters and command-line `--cpus-per-task=12`, then report the Job ID. Follow the live preflight if the current CPU limit differs, and do not put the CPU count in the tracked .slurm script.
 ```
 
 ## 3. Post-Analysis Q&A

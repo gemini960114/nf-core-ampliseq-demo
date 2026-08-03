@@ -209,8 +209,13 @@ bash 03_scripts/prepare_assets.sh
 export SLURM_ACCOUNT="<PROJECT_ID>"
 bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
   --project "$SLURM_ACCOUNT" --partition "dev"
-sbatch --account="$SLURM_ACCOUNT" 03_scripts/submit_ampliseq.slurm
+sbatch --account="$SLURM_ACCOUNT" --cpus-per-task=12 \
+  03_scripts/submit_ampliseq.slurm
 ```
+Keep `--cpus-per-task=12` on the `sbatch` command line rather than in the tracked
+`submit_ampliseq.slurm`. Live Nano4 testing on 2026-08-03 found 12 CPUs to be the
+maximum accepted with one GPU on `dev`; rerun live preflight because scheduler
+limits can change.
 Check progress via `squeue -u $USER`.
 
 ---

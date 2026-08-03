@@ -69,9 +69,14 @@ bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
 
 ```bash
 mkdir -p logs
-sbatch --account="<PROJECT_ID>" 03_scripts/submit_ampliseq.slurm
+sbatch --account="<PROJECT_ID>" --cpus-per-task=12 \
+  03_scripts/submit_ampliseq.slurm
 squeue -u "$USER"
 ```
+
+正式 `.slurm` 腳本不固定 CPU 或 RAM。2026-08-03 的 Nano4 `dev` 即時測試
+確認 1 GPU 最多接受 12 CPU，所以 CPU 數量在提交命令列傳入；此上限可能
+改變，每次提交前仍須重新執行 live preflight。
 
 取得 Job ID 後，可用以下指令查看一次狀態；不要建立無限輪詢迴圈：
 

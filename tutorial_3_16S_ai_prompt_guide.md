@@ -22,8 +22,10 @@ repository 內建的 34 個 Moving Pictures 單端 FASTQ。
 4. 在登入節點執行 03_scripts/prepare_assets.sh。
 5. 驗證 submit_ampliseq.slurm 使用 --single_end、--trunclenf 120，
    並以 body_site 進行 barplot 與 Adonis。
-6. 使用 sbatch --account="<PROJECT_ID>" 提交，回報 Job ID，並以非輪詢
-   方式監控。
+6. 正式 .slurm 腳本不要固定 CPU；live preflight 通過後，使用
+   sbatch --account="<PROJECT_ID>" --cpus-per-task=12 提交，回報 Job ID，
+   並以非輪詢方式監控。12 CPU 是 2026-08-03 對 dev + 1 GPU 的實測上限，
+   若即時限制不同則以 preflight 為準。
 ```
 
 ## 2. 分階段提示詞
@@ -43,7 +45,7 @@ samplesheet.template.tsv 必須是單端格式；metadata 必須包含相同 sam
 
 請在登入節點執行 03_scripts/prepare_assets.sh。資產必須存入目前帳號自己的 `/work/${USER}/` 目錄，不要使用其他帳號的 cache。
 
-準備完成後，請使用我的計畫 <PROJECT_ID> 與 dev 執行 Nano4 preflight。通過後，以 Moving Pictures 單端參數提交 03_scripts/submit_ampliseq.slurm，回報 Job ID。
+準備完成後，請使用我的計畫 <PROJECT_ID> 與 dev 執行 Nano4 preflight。通過後，以 Moving Pictures 單端參數及提交命令列 `--cpus-per-task=12` 提交 03_scripts/submit_ampliseq.slurm，回報 Job ID；若即時 CPU 限制不同則以 preflight 為準，不要將 CPU 數量寫入正式 .slurm 腳本。
 ```
 
 ## 3. 分析後 Q&A

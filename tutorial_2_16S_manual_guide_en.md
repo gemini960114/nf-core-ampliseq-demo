@@ -66,9 +66,15 @@ Proceed to submission only if preflight passes completely. Moving Pictures submi
 
 ```bash
 mkdir -p logs
-sbatch --account="<PROJECT_ID>" 03_scripts/submit_ampliseq.slurm
+sbatch --account="<PROJECT_ID>" --cpus-per-task=12 \
+  03_scripts/submit_ampliseq.slurm
 squeue -u "$USER"
 ```
+
+The tracked `.slurm` script does not hardcode CPU or RAM. Live Nano4 testing on
+2026-08-03 found 12 CPUs to be the maximum accepted with one GPU on `dev`, so the
+CPU request is passed on the submission command line. Rerun live preflight before
+every submission because this limit can change.
 
 After obtaining the Job ID, use a single query command to check status; do not construct infinite polling loops:
 

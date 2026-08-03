@@ -205,7 +205,11 @@ bash 03_scripts/prepare_assets.sh
 AI Agent 會以 `nano4-slurm-operations` 驗證計畫與 partition，再以
 `slurm-ampliseq-guide` 準備 Moving Pictures 分析：
 - **Slurm 分割區 (Partition)**：本範例預設 `dev`；替換 partition 前必須重新執行即時 preflight，不使用文件中的靜態清單推測權限。
-- **GPU 資源**：正式腳本使用 `--gpus-per-node=1`，不指定 CPU 數量或 RAM；`dev` 最長執行時間為 4 小時。
+- **GPU / CPU 資源**：正式腳本使用 `--gpus-per-node=1`，不在版本控制的
+  `.slurm` 檔內固定 CPU 數量或 RAM。2026-08-03 的 Nano4 `dev` 即時測試
+  確認每個 1 GPU 工作最多可申請 12 CPU，因此本範例在提交命令列使用
+  `--cpus-per-task=12`；此限制可能變動，提交前仍須執行 live preflight。
+  `dev` 最長執行時間為 4 小時。
 - **物種資料庫 (--dada_ref_taxonomy)**：
   - 16S 細菌：`silva=138.2` (預設)
   - 真菌 ITS：`unite-fungi=9.0`（僅限替換成 ITS 輸入資料後使用）
@@ -243,8 +247,11 @@ bash 03_scripts/prepare_assets.sh
 export SLURM_ACCOUNT="<PROJECT_ID>"
 bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
   --project "$SLURM_ACCOUNT" --partition "dev"
-sbatch --account="$SLURM_ACCOUNT" 03_scripts/submit_ampliseq.slurm
+sbatch --account="$SLURM_ACCOUNT" --cpus-per-task=12 \
+  03_scripts/submit_ampliseq.slurm
 ```
+`--cpus-per-task=12` 必須放在 `sbatch` 提交命令，而不是寫入正式
+`submit_ampliseq.slurm`，讓腳本可配合每次 preflight 的即時限制。
 並透過 `squeue -u $USER` 查詢工作進度。
 
 ---
