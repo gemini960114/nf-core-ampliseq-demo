@@ -220,17 +220,37 @@ Check progress via `squeue -u $USER`.
 
 ---
 
+### Step 4: Analysis Report & Overall Summary Table Generation (`results/`)
+
+Upon completion of the analysis pipeline, the AI Agent can automatically aggregate metrics from the `results/` directory to generate a full sample data summary table and a comprehensive Markdown report:
+
+1. **Overall Sample Summary Table (`results/overall_summary.tsv`)**:
+   - Integrates all 34 sample metadata fields (`body_site`, `subject`, `reported_antibiotic_usage`, etc.) with DADA2 / QIIME 2 quality trimming, denoising, chimera removal, and taxonomy filtering read counts and retention rates (`retained_percent`).
+2. **Comprehensive Analysis Report (`results/report.md`)**:
+   - Includes executive summary, read quality and filtering statistics, Phylum / Genus level taxonomic abundance and community structure comparisons across body sites, biological insights discussion, and links to interactive HTML reports.
+
+#### 💡 AI Agent Prompt Example (Copy & Paste to AI)
+> ```text
+> Based on the analysis results in the results folder, write an analysis summary and report in results/report.md
+> 
+> and generate a full sample data summary table at results/overall_summary.tsv
+> ```
+
+---
+
 ## 📊 Output Reports & Data Visualization
 
 Upon successful completion, the `results/` folder is generated under project root:
 
-1. **MultiQC Comprehensive Report**: `results/multiqc/multiqc_report.html`
-2. **Pipeline Overview Summary**: `results/summary_report/summary_report.html`
-3. **QIIME 2 Interactive Visualizations**:
+1. **Overall Sample Summary Table**: `results/overall_summary.tsv`
+2. **Comprehensive Analysis Report**: `results/report.md`
+3. **MultiQC Comprehensive Report**: `results/multiqc/multiqc_report.html`
+4. **Pipeline Overview Summary**: `results/summary_report/summary_report.html`
+5. **QIIME 2 Interactive Visualizations**:
    - **Taxonomy Barplot**: `results/qiime2/barplot/index.html`
    - **Alpha Rarefaction Curves**: `results/qiime2/alpha-rarefaction/index.html`
    - **Beta Diversity PCoA 3D Emperor Plot**: `results/qiime2/diversity/beta_diversity/bray_curtis_pcoa_results-PCoA/index.html`
-4. **Nextflow Execution Report**: `results/pipeline_info/execution_report_*.html`
+6. **Nextflow Execution Report**: `results/pipeline_info/execution_report_*.html`
 
 ### 🌐 Integrated Interactive Dashboard (Recommended!)
 

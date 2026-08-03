@@ -256,6 +256,24 @@ sbatch --account="$SLURM_ACCOUNT" --cpus-per-task=12 \
 
 ---
 
+### 步驟四：分析總結報告與全樣本數據總表生成 (`results/`)
+
+任務分析完成後，可透過 AI Agent 自動彙整 `results/` 資料夾內的各項數據，生成全樣本數據總表與綜合分析 Markdown 報告：
+
+1. **全樣本數據總表 (`results/overall_summary.tsv`)**：
+   - 整合 34 個樣本之元數據（採樣部位 `body_site`、受試者 `subject`、抗生素紀錄 `reported_antibiotic_usage` 等）與 DADA2 去噪、去嵌合體、物種篩選各階段之讀段數與保留率 (`retained_percent`)。
+2. **綜合分析報告 (`results/report.md`)**：
+   - 包含執行摘要、讀段品質與過濾統計、各採樣部位門 (Phylum) / 屬 (Genus) 級別物種豐度與群落結構比較、生態學討論及產出報告導覽連結。
+
+#### 💡 AI Agent 提示詞範例（複製貼上給 AI）
+> ```text
+> 根據 results 資料夾的分析結果幫我 寫一份分析 總結與分析結果 results/report.md
+> 
+> 並放置一份 全樣本數據總表 ( results/overall_summary.tsv)
+> ```
+
+---
+
 ## 📊 產出報告與成果可視化
 
 分析成功完成後，會在專案目錄下生成 `results/` 目錄，包含：
@@ -264,14 +282,16 @@ sbatch --account="$SLURM_ACCOUNT" --cpus-per-task=12 \
 > 成功完成後才會存在；實際 ASV 數量、執行時間、菌相比例與統計值會隨
 > pipeline 版本、參數及輸入資料而變動。
 
-1. **MultiQC 綜合統計總報告**：`results/multiqc/multiqc_report.html`
-2. **流程總覽簡報**：`results/summary_report/summary_report.html`
-3. **QIIME 2 互動式可視化圖表**：
+1. **全樣本數據總表**：`results/overall_summary.tsv`
+2. **綜合分析報告**：`results/report.md`
+3. **MultiQC 綜合統計總報告**：`results/multiqc/multiqc_report.html`
+4. **流程總覽簡報**：`results/summary_report/summary_report.html`
+5. **QIIME 2 互動式可視化圖表**：
    - **Taxonomy 物種分類柱狀圖**：`results/qiime2/barplot/index.html`
    - **Alpha 多樣性稀疏曲線**：`results/qiime2/alpha-rarefaction/index.html`
    - **Beta 多樣性 PCoA 3D Emperor 圖表**：`results/qiime2/diversity/beta_diversity/bray_curtis_pcoa_results-PCoA/index.html`
-4. **Nextflow 執行報告（資源用量）**：`results/pipeline_info/execution_report_*.html`
-5. **Nextflow Pipeline DAG 圖**：`results/pipeline_info/pipeline_dag_*.html`
+6. **Nextflow 執行報告（資源用量）**：`results/pipeline_info/execution_report_*.html`
+7. **Nextflow Pipeline DAG 圖**：`results/pipeline_info/pipeline_dag_*.html`
 
 ### 🌐 整合型互動儀表板（推薦！）
 
@@ -303,6 +323,8 @@ http://localhost:8000/04_viewer/index.html
 
 ```text
 results/
+├── 📋 overall_summary.tsv             # ⭐ 全樣本序列過濾與 metadata 統計總表
+├── 📄 report.md                       # ⭐ 綜合分析結果 Markdown 報告
 ├── 📊 multiqc/
 │   └── multiqc_report.html            # ⭐ MultiQC 綜合統計總報告
 ├── 📈 summary_report/
@@ -325,7 +347,6 @@ results/
 │   └── phylogenetic_tree/             # 系統發育樹 (Rooted MAFFT + FastTree)
 ├── 🌊 barrnap/                        # rRNA barrnap 偵測結果
 ├── 🌳 treesummarizedexperiment/       # TreeSE 物件（R 後續分析用）
-├── 📋 overall_summary.tsv             # ⭐ 全樣本序列過濾統計總表
 └── pipeline_info/
     ├── execution_report_*.html        # Nextflow 資源用量報告
     ├── execution_timeline_*.html      # 任務執行時間軸
@@ -347,7 +368,7 @@ results/
 
 ---
 
-## 🧪 步驟四（選修）：R 下游進階分析 (Downstream Analysis with phyloseq)
+## 🧪 步驟五（選修）：R 下游進階分析 (Downstream Analysis with phyloseq)
 
 分析完成後，可使用已快取的 Singularity `phyloseq` 容器直接執行 R 下游統計與繪圖腳本：
 
